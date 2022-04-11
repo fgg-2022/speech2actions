@@ -1,0 +1,11 @@
+{
+  "obj1": {
+    "name": "trees",
+    "count": 2
+  },
+  "obj2": {
+    "name": "field",
+    "count": 1
+  },
+  "prep": "in"
+}

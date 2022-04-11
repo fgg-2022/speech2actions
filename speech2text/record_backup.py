@@ -12,11 +12,11 @@ framerate = 16000  # 采样率
 num_samples = 2000  # 采样点
 channels = 1  # 声道
 sampwidth = 2  # 采样宽度2bytes
-FILENAME = '../audio/speech'
+FILEPATH = 'speech.wav'
 
 base_url = "https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s"
-APIKey = "C84a1AHter2NInG6iF2g6sCQ" # 在个人页面复制
-SecretKey = "u0XkO6mNtHORgDQl1S5AVjjIkYqEpEDI"
+APIKey = "2MgKWWbfeInIwEzIBEFa4twl"  # 在个人页面复制
+SecretKey = "zOA7nau2n0gTUGaTHvhe6ACAKciG8tGa"
 
 HOST = base_url % (APIKey, SecretKey)
 
@@ -25,7 +25,6 @@ def getToken(host):
     res = requests.post(host)
     return res.json()['access_token']
 
-
 def save_wave_file(filepath, data):
     wf = wave.open(filepath, 'wb')
     wf.setnchannels(channels)
@@ -33,6 +32,23 @@ def save_wave_file(filepath, data):
     wf.setframerate(framerate)
     wf.writeframes(b''.join(data))
     wf.close()
+
+
+def my_record():
+    pa = PyAudio()
+    stream = pa.open(format=paInt16, channels=channels,
+                     rate=framerate, input=True, frames_per_buffer=num_samples)
+    my_buf = []
+    # count = 0
+    t = time.time()
+    print('正在录音...')
+
+    while time.time() < t + 8:  # 秒
+        string_audio_data = stream.read(num_samples)
+        my_buf.append(string_audio_data)
+    print('录音结束.')
+    save_wave_file(FILEPATH, my_buf)
+    stream.close()
 
 
 def get_audio(file):
@@ -70,21 +86,35 @@ def speech2text(speech_data, token, dev_pid=1537):
         return Result
 
 
-def do_transfer(file_path):
-    print('================================ BEGIN: Get sentence from record file ================================')
-    TOKEN = getToken(HOST)
-    speech = get_audio(file_path)
-    result = speech2text(speech, TOKEN, 1737)
-    print('================================ Done: Get sentence from record file ================================')
+def openbrowser(text):
+    maps = {
+        '百度': ['百度', 'baidu'],
+        '腾讯': ['腾讯', 'tengxun'],
+        '网易': ['网易', 'wangyi']
 
-    return result
+    }
+    if text in maps['百度']:
+        webbrowser.open_new_tab('https://www.baidu.com')
+    elif text in maps['腾讯']:
+        webbrowser.open_new_tab('https://www.qq.com')
+    elif text in maps['网易']:
+        webbrowser.open_new_tab('https://www.163.com/')
+    else:
+        webbrowser.open_new_tab('https://www.baidu.com/s?wd=%s' % text)
 
 
 if __name__ == '__main__':
     flag = 'y'
-    r = 1
-    while r < 6:
-        do_transfer(FILENAME + str(r) + '.wav')
-        r = r + 1
+    while flag.lower() == 'y':
+        print('请输入数字选择语言：')
+        devpid = input('1536：普通话(简单英文),1537:普通话(有标点),1737:英语,1637:粤语,1837:四川话\n')
+        my_record()
+        TOKEN = getToken(HOST)
+        speech = get_audio(FILEPATH)
+        result = speech2text(speech, TOKEN, int(devpid))
+        print(result)
+        # if type(result) == str:
+        #     openbrowser(result.strip('，'))
+        flag = input('Continue?(y/n):')
 
 # i want a square on a table

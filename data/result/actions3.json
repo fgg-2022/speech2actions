@@ -1,0 +1,11 @@
+{
+  "obj1": {
+    "name": "boat",
+    "count": 1
+  },
+  "obj2": {
+    "name": "river",
+    "count": 1
+  },
+  "prep": "on"
+}

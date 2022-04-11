@@ -1,0 +1,11 @@
+{
+  "obj1": {
+    "name": "radio",
+    "count": 1
+  },
+  "obj2": {
+    "name": "table",
+    "count": 1
+  },
+  "prep": "on"
+}

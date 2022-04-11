@@ -1,0 +1,11 @@
+{
+  "obj1": {
+    "name": "bird",
+    "count": 1
+  },
+  "obj2": {
+    "name": "sea",
+    "count": 1
+  },
+  "prep": "above"
+}

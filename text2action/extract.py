@@ -23,6 +23,9 @@ class Noun:
         return 'name: %s, count: %s, start: %s' \
                % (self.word, self.cnt, self.idx)
 
+    def to_tuple(self):
+        return (self.word, self.cnt, self.idx)
+
 
 class Prep:
     word = ''
@@ -49,6 +52,11 @@ class Prep:
             description = 'prep-phrase'
         return '%s: %s, start: %s' % (description, self.word, self.idx)
 
+    def to_tuple(self):
+        description = 'preposition'
+        if self.phrase:
+            description = 'prep-phrase'
+        return (description, self.word, self.idx)
 
 # 检查名词是不是合法的：如果一个名词是介词短语的一部分就是不合法的
 def check_valid_noun(noun, word_tags, len):
@@ -121,6 +129,7 @@ def extract_prep(word_tags, length):
 
 
 def parse_sent(sentence):
+    print('================================ BEGIN: Parsing sentence to actions ================================')
 
     # nlp = StanfordCoreNLP(r'E:\nju\hci\stanford-corenlp-4.4.0')
     nlp = StanfordCoreNLP('/home/songdj/hci/data/stanford-corenlp-4.4.0')
@@ -150,8 +159,10 @@ def parse_sent(sentence):
     prep_word = extract_prep(arr, length)
     print(str(prep_word))
 
-
     nlp.close()  # Do not forget to close! The backend server will consume a lot memery.
+
+    print('================================ Done: Parsing sentence to actions ================================')
+    return [n.to_tuple() for n in noun_words], prep_word.to_tuple()
 
 
 if __name__ == '__main__':
