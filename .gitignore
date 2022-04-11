@@ -9,3 +9,6 @@
 
 
 .idea
+data/stanford-corenlp-4.4.0
+data/stanford-corenlp-latest.zip
+text2action/embedding
